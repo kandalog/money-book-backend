@@ -8,6 +8,7 @@ require("dotenv").config();
 const indexRouter = require("./routes/index");
 const authRouter = require("./routes/auth");
 const userRouter = require("./routes/user");
+const moneyRouter = require("./routes/money");
 
 // sessionの設定
 const session_opt = {
@@ -26,5 +27,6 @@ app.use(cors());
 app.use("/", indexRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
+app.use("/api/money", moneyRouter);
 
 app.listen(4000, console.log("サーバーを開始します。"));
