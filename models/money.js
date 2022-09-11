@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       date: {
         allowNull: false,
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         validate: { notNull: { msg: "日付は必須です。" } },
       },
       message: DataTypes.STRING,
