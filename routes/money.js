@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 
 const { Money } = require("../models");
+const { Op, query } = require("sequelize");
+// const sequelize = require("sequelize");
 
 // ログインしているかチェック
 const isLogin = (req, res) => {
@@ -66,10 +68,14 @@ router.delete("/:id", async (req, res) => {
 // 月単位でレコードを取得
 router.get("/month", async (req, res) => {
   isLogin(req, res);
-  const target = req.body.date; // 200220912
   try {
-    // その月のデータを取得する
-    const date = await Money.findAll();
+    const data = await Money.findAll({
+      where: {
+        date: { [Op.substring]: req.body.date.slice(0, 7) },
+        userId: req.body.userId,
+      },
+    });
+    return res.status(200).json(data);
   } catch (err) {
     return res.status(500).json(err);
   }
@@ -79,20 +85,32 @@ router.get("/month", async (req, res) => {
 router.get("/category", async (req, res) => {
   isLogin(req, res);
   try {
+    const data = await Money.findAll({
+      where: {
+        category: req.body.category,
+        userId: req.body.userId,
+      },
+    });
+    return res.status(200).json(data);
   } catch (err) {
     return res.status(500).json(err);
   }
 });
 
 // 月単位 && カテゴリーでレコードを取得
-router.get("/", async (req, res) => {
-  if (req.body.userId) {
-    try {
-    } catch (err) {
-      return res.status(500).json(err);
-    }
-  } else {
-    return res.status(403).json({ msg: "ログインしてください" });
+router.get("/select", async (req, res) => {
+  isLogin(req, res);
+  try {
+    const data = await Money.findAll({
+      where: {
+        date: { [Op.substring]: req.body.date.slice(0, 7) },
+        userId: req.body.userId,
+        category: req.body.category,
+      },
+    });
+    return res.status(200).json(data);
+  } catch (err) {
+    return res.status(500).json(err);
   }
 });
 
