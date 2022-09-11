@@ -27,8 +27,13 @@ module.exports = (sequelize, DataTypes) => {
       },
       date: {
         allowNull: false,
-        type: DataTypes.INTEGER,
+        type: DataTypes.DATE,
         validate: { notNull: { msg: "日付は必須です。" } },
+      },
+      category: {
+        allowNull: false,
+        type: DataTypes.STRING,
+        validate: { notNull: { msg: "カテゴリーは必須です。" } },
       },
       message: DataTypes.STRING,
       bool: DataTypes.BOOLEAN,

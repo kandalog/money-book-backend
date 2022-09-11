@@ -18,7 +18,11 @@ module.exports = {
       },
       date: {
         allowNull: false,
-        type: Sequelize.INTEGER,
+        type: Sequelize.DATE,
+      },
+      category: {
+        allowNull: false,
+        type: Sequelize.STRING,
       },
       message: {
         type: Sequelize.STRING,
