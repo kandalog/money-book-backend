@@ -5,8 +5,9 @@ const cors = require("cors");
 const session = require("express-session");
 require("dotenv").config();
 
-const userRouter = require("./routes/user");
 const indexRouter = require("./routes/index");
+const authRouter = require("./routes/auth");
+const userRouter = require("./routes/user");
 
 // sessionの設定
 const session_opt = {
@@ -23,6 +24,7 @@ app.use(cors());
 
 // API
 app.use("/", indexRouter);
+app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
 
-app.listen(3000, console.log("サーバーを開始します。"));
+app.listen(4000, console.log("サーバーを開始します。"));
