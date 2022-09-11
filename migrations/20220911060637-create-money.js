@@ -18,7 +18,7 @@ module.exports = {
       },
       date: {
         allowNull: false,
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
       },
       message: {
         type: Sequelize.STRING,
