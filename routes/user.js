@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-
+const bcrypt = require("bcrypt");
 const { User } = require("../models");
 
 // 全てのユーザーを取得 (管理用)
@@ -37,10 +37,10 @@ router.get("/:id", async (req, res) => {
 router.put("/:id", async (req, res) => {
   if (req.body.userId === Number(req.params.id)) {
     try {
+      const hash = await bcrypt.hash(req.body.password, 10);
       const user = await User.findByPk(req.params.id);
-      user.name = req.body.name || user.name;
       user.email = req.body.email || user.email;
-      user.password = req.body.password || user.password;
+      user.password = hash || user.password;
       await user.save();
       return res.status(200).json(user);
     } catch (err) {
