@@ -16,19 +16,17 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER,
       },
-      date: {
+      memo: {
         allowNull: false,
-        type: Sequelize.DATE,
-      },
-      category: {
-        allowNull: false,
-        type: Sequelize.STRING,
-      },
-      message: {
         type: Sequelize.STRING,
       },
       bool: {
+        allowNull: false,
         type: Sequelize.BOOLEAN,
+      },
+      date: {
+        allowNull: false,
+        type: Sequelize.DATE,
       },
       createdAt: {
         allowNull: false,

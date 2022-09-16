@@ -1,5 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
+const user = require("./user");
 module.exports = (sequelize, DataTypes) => {
   class Money extends Model {
     /**
@@ -14,29 +15,27 @@ module.exports = (sequelize, DataTypes) => {
   Money.init(
     {
       userId: {
-        allowNull: false,
         type: DataTypes.INTEGER,
-      },
-      amount: {
         allowNull: false,
-        type: DataTypes.INTEGER,
-        validate: {
-          notNull: { msg: "金額は必須です。" },
-          isInt: { msg: "金額は半角数字で入力してください" },
+        references: {
+          model: user,
+          key: "id",
         },
       },
+      amount: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: { notNull: { msg: "金額は必須です" } },
+      },
+      memo: DataTypes.STRING,
+      bool: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+      },
       date: {
-        allowNull: false,
         type: DataTypes.DATE,
-        validate: { notNull: { msg: "日付は必須です。" } },
-      },
-      category: {
         allowNull: false,
-        type: DataTypes.STRING,
-        validate: { notNull: { msg: "カテゴリーは必須です。" } },
       },
-      message: DataTypes.STRING,
-      bool: DataTypes.BOOLEAN,
     },
     {
       sequelize,

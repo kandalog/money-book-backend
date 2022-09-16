@@ -19,9 +19,8 @@ router.post("/", async (req, res) => {
     const money = await Money.create({
       userId: req.body.userId,
       amount: req.body.amount,
+      memo: req.body.memo || "",
       date: req.body.date,
-      category: req.body.category,
-      message: req.body.message || "",
       bool: req.body.bool,
     });
     return res.status(200).json(money);
@@ -40,8 +39,7 @@ router.put("/:id", async (req, res) => {
     }
     money.amount = req.body.amount || money.amount;
     money.date = req.body.date || money.date;
-    money.category = req.body.category || money.category;
-    money.message = req.body.message || money.message;
+    money.memo = req.body.memo || money.memo;
     money.bool = req.body.bool || money.bool;
     await money.save();
     return res.status(200).json(money);
@@ -75,39 +73,9 @@ router.get("/month", async (req, res) => {
         userId: req.body.userId,
       },
     });
-    return res.status(200).json(data);
-  } catch (err) {
-    return res.status(500).json(err);
-  }
-});
-
-// カテゴリーでレコードを取得
-router.get("/category", async (req, res) => {
-  isLogin(req, res);
-  try {
-    const data = await Money.findAll({
-      where: {
-        category: req.body.category,
-        userId: req.body.userId,
-      },
-    });
-    return res.status(200).json(data);
-  } catch (err) {
-    return res.status(500).json(err);
-  }
-});
-
-// 月単位 && カテゴリーでレコードを取得
-router.get("/select", async (req, res) => {
-  isLogin(req, res);
-  try {
-    const data = await Money.findAll({
-      where: {
-        date: { [Op.substring]: req.body.date.slice(0, 7) },
-        userId: req.body.userId,
-        category: req.body.category,
-      },
-    });
+    if (!data) {
+      return res.status(200).json({ msg: "該当データが存在しませんでした" });
+    }
     return res.status(200).json(data);
   } catch (err) {
     return res.status(500).json(err);
