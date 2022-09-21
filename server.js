@@ -29,4 +29,4 @@ app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
 app.use("/api/money", moneyRouter);
 
-app.listen(4000, console.log("サーバーを開始します。"));
+app.listen(process.env.PORT || 4000, console.log("サーバーを開始します。"));
