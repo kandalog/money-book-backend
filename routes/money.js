@@ -83,6 +83,7 @@ router.post("/month", async (req, res) => {
         userId: req.body.userId,
         bool: req.body.bool,
       },
+      order: [["id", "DESC"]],
     });
     if (!data) {
       return res.status(200).json({ msg: "該当データが存在しませんでした" });
