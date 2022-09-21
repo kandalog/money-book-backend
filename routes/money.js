@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const { Money } = require("../models");
-const { Op, query } = require("sequelize");
+const { Op, query, INTEGER, json } = require("sequelize");
 // const sequelize = require("sequelize");
 
 // ログインしているかチェック
@@ -16,13 +16,23 @@ const isLogin = (req, res) => {
 router.post("/", async (req, res) => {
   isLogin(req, res);
   try {
-    const money = await Money.create({
+    const money = await Money.build({
       userId: req.body.userId,
       amount: req.body.amount,
       memo: req.body.memo || "",
       date: req.body.date,
       bool: req.body.bool,
     });
+
+    if (money.memo === "") {
+      return res.status(403).json({ msg: "内容は必須です" });
+    }
+
+    if (money.amount <= 0) {
+      return res.status(403).json({ msg: "価格は1円以上である必要があります" });
+    }
+
+    await money.save();
     return res.status(200).json(money);
   } catch (err) {
     return res.status(500).json(err);
@@ -63,20 +73,45 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// 月単位でレコードを取得
-router.get("/month", async (req, res) => {
+// 月別でレコードを取得 trueは収入 falseは支出
+router.post("/month", async (req, res) => {
   isLogin(req, res);
   try {
     const data = await Money.findAll({
       where: {
         date: { [Op.substring]: req.body.date.slice(0, 7) },
         userId: req.body.userId,
+        bool: req.body.bool,
       },
     });
     if (!data) {
       return res.status(200).json({ msg: "該当データが存在しませんでした" });
+    } else {
+      return res.status(200).json(data);
     }
-    return res.status(200).json(data);
+  } catch (err) {
+    return res.status(500).json(err);
+  }
+});
+
+// 月別で収入と支出の合計額を算出する
+router.post("/month/saving", async (req, res) => {
+  isLogin(req, res);
+  try {
+    const response = await Money.findAll({
+      where: {
+        date: { [Op.substring]: req.body.date.slice(0, 7) },
+        userId: req.body.userId,
+        bool: req.body.bool,
+      },
+    });
+    let saving = 0;
+    if (response && response[0]) {
+      response.map((data) => {
+        saving += data.amount;
+      });
+    }
+    return res.status(200).json(saving);
   } catch (err) {
     return res.status(500).json(err);
   }
