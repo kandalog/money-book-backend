@@ -59,13 +59,9 @@ router.put("/:id", async (req, res) => {
 });
 
 // 家計簿レコードの削除
-router.delete("/:id", async (req, res) => {
-  isLogin(req, res);
+router.delete("/", async (req, res) => {
   try {
-    const money = await Money.findByPk(req.params.id);
-    if (!(req.body.userId === money.userId)) {
-      return res.status(403).json({ msg: "他人のデータは削除できません" });
-    }
+    const money = await Money.findByPk(req.body.id);
     await money.destroy();
     return res.status(200).json("データを削除しました");
   } catch (err) {
